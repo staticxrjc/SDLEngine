@@ -1,0 +1,1 @@
+add_library(Graphics Color.cpp ScreenBuffer.cpp Screen.cpp)

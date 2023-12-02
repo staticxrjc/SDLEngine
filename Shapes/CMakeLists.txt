@@ -1,0 +1,1 @@
+add_library(Shapes Line2D.cpp Star2D.cpp)
