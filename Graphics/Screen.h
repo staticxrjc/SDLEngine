@@ -3,12 +3,16 @@
 #include <stdint.h>
 #include "ScreenBuffer.h"
 #include "Color.h"
+#include <vector>
 
 struct SDL_Window;
 struct SDL_Surface;
 class Vec2D;
 class Line2D;
 class Star2D;
+class Triangle;
+class AARectangle;
+class Circle;
 
 class Screen {
    public:
@@ -27,12 +31,16 @@ class Screen {
     void Draw(const Vec2D& point, const Color& color);
     void Draw(const Line2D& line, const Color& color);
     void Draw(const Star2D& star, const Color& color);
+    void Draw(const Triangle& triangle, const Color& color, bool fill = false, const Color& fillColor = Color::White());
+    void Draw(const AARectangle& rect, const Color& color, bool fill = false, const Color& fillColor = Color::White());
+    void Draw(const Circle& circle, const Color& color, bool fill = false, const Color& fillColor = Color::White());
 
    private:
     Screen(const Screen& screen);
     Screen& operator=(const Screen& screen);
 
     void ClearScreen();
+    void FillPoly(const std::vector<Vec2D>& points, const Color& color);
 
     uint32_t mWidth;
     uint32_t mHeight;

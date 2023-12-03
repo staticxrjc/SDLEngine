@@ -22,7 +22,6 @@ void Star2D::Rotate(float rotationAngle) {
 
 void Star2D::SetSides() {
     const float pi = 3.141592654f;
-    std::cout << mRotationAngle << std::endl;
     Vec2D StarPoint(mMidpoint.GetX(), mMidpoint.GetY() - mSize / 2);
     mSides[0].SetP0(StarPoint.GetRotatedVec(mRotationAngle, mMidpoint));
     mSides[0].SetP1(StarPoint.GetRotatedVec(144.0f * pi / 180.0f + mRotationAngle, mMidpoint));

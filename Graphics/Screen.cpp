@@ -1,9 +1,14 @@
 #include "Screen.h"
 #include "../Utils/Vec2D.h"
+#include "../Utils/Utils.h"
 #include "../Shapes/Line2D.h"
 #include "../Shapes/Star2D.h"
+#include "../Shapes/Triangle.h"
+#include "../Shapes/AARectangle.h"
+#include "../Shapes/Circle.h"
 #include <SDL2/SDL.h>
 #include <cassert>
+#include <algorithm>
 
 Screen::~Screen() {
     if (moptrWindow) {
@@ -37,7 +42,7 @@ SDL_Window* Screen::Init(uint32_t width, uint32_t height, uint32_t magnification
 
     mnoptrWindowSurface = SDL_GetWindowSurface(moptrWindow);
 
-    SDL_PixelFormat* pixelFormat = mnoptrWindowSurface->format;
+    SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
 
     Color::InitColorFormat(pixelFormat);  // Mandatory
 
@@ -134,8 +139,111 @@ void Screen::Draw(const Star2D& star, const Color& color) {
     }
 }
 
+void Screen::Draw(const Triangle& triangle, const Color& color, bool fill, const Color& fillColor) {
+    if (fill) FillPoly(triangle.GetPoints(), fillColor);
+
+    Line2D p0p1 = Line2D(triangle.GetP0(), triangle.GetP1());
+    Line2D p1p2 = Line2D(triangle.GetP1(), triangle.GetP2());
+    Line2D p2p0 = Line2D(triangle.GetP2(), triangle.GetP0());
+
+    Draw(p0p1, color);
+    Draw(p1p2, color);
+    Draw(p2p0, color);
+}
+
+void Screen::Draw(const AARectangle& rect, const Color& color, bool fill, const Color& fillColor) {
+    std::vector<Vec2D> points = rect.GetPoints();
+    if (fill) FillPoly(points, fillColor);
+
+    Line2D p0p1 = Line2D(points[0], points[1]);
+    Line2D p1p2 = Line2D(points[1], points[2]);
+    Line2D p2p3 = Line2D(points[2], points[3]);
+    Line2D p3p0 = Line2D(points[3], points[0]);
+
+    Draw(p0p1, color);
+    Draw(p1p2, color);
+    Draw(p2p3, color);
+    Draw(p3p0, color);
+}
+
+void Screen::Draw(const Circle& circle, const Color& color, bool fill, const Color& fillColor) {
+    static unsigned int NUM_CIRCLE_SEGMENTS = 30;
+
+    std::vector<Vec2D> circlePoints;
+    std::vector<Line2D> lines;
+
+    float angle = TWO_PI / float(NUM_CIRCLE_SEGMENTS);
+
+    Vec2D p0 = Vec2D(circle.GetCenterPoint().GetX() + circle.GetRadius(), circle.GetCenterPoint().GetY());
+    Vec2D p1 = p0;
+
+    Line2D nextLineToDraw;
+
+    for (int i = 0; i < NUM_CIRCLE_SEGMENTS; ++i) {
+        p1.Rotate(angle, circle.GetCenterPoint());
+        nextLineToDraw.SetP0(p0);
+        nextLineToDraw.SetP1(p1);
+
+        lines.push_back(nextLineToDraw);
+        p0 = p1;
+        circlePoints.push_back(p0);
+    }
+
+    if (fill) FillPoly(circlePoints, fillColor);
+
+    for (const Line2D& line : lines) Draw(line, color);
+}
+
 void Screen::ClearScreen() {
     assert(moptrWindow);
     if (!moptrWindow) return;
     SDL_FillRect(mnoptrWindowSurface, nullptr, mClearColor.GetPixelColor());
+}
+
+void Screen::FillPoly(const std::vector<Vec2D>& points, const Color& color) {
+    if (points.size() == 0) return;
+
+    float top = points[0].GetY();
+    float bottom = points[0].GetY();
+    float right = points[0].GetX();
+    float left = points[0].GetX();
+
+    for (size_t i = 1; i < points.size(); ++i) {
+        if (points[i].GetY() < top) top = points[i].GetY();
+        if (points[i].GetY() > bottom) bottom = points[i].GetY();
+        if (points[i].GetX() > right) right = points[i].GetX();
+        if (points[i].GetX() < left) left = points[i].GetX();
+    }
+
+    for (int pixelY = top; pixelY < bottom; ++pixelY) {
+        std::vector<float> nodeXVec;
+        size_t j = points.size() - 1;
+
+        for (size_t i = 0; i < points.size(); ++i) {
+            float pointiY = points[i].GetY();
+            float pointjY = points[j].GetY();
+
+            if ((pointiY <= (float)pixelY && pointjY > (float)pixelY) || (pointjY <= (float)pixelY && pointiY > (float)pixelY)) {
+                float denominator = pointjY - pointiY;
+                if (IsEqual(denominator, 0.0f)) continue;
+
+                float x = points[i].GetX() + (pixelY - pointiY) / denominator * (points[j].GetX() - points[i].GetX());
+                nodeXVec.push_back(x);
+            }
+            j = i;
+        }
+        std::sort(nodeXVec.begin(), nodeXVec.end(), std::less<>());
+
+        for (size_t k = 0; k < nodeXVec.size(); k += 2) {
+            if (nodeXVec[k] > right) break;
+            if (nodeXVec[k + 1] > left) {
+                if (nodeXVec[k] < left) nodeXVec[k] = left;
+                if (nodeXVec[k + 1] > right) nodeXVec[k + 1] = right;
+            }
+
+            for (int pixelX = nodeXVec[k]; pixelX < nodeXVec[k + 1]; ++pixelX) {
+                Draw(pixelX, pixelY, color);
+            }
+        }
+    }
 }
