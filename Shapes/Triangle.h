@@ -17,6 +17,7 @@ class Triangle : public Shape {
     inline Vec2D GetP2() const { return mPoints[2]; }
 
     Vec2D GetCenterPoint() const override;
+    virtual void MoveTo(const Vec2D& point) override;
 
     float Area() const;
 

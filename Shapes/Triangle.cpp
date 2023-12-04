@@ -9,7 +9,11 @@ Triangle::Triangle(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2) {
 }
 
 Vec2D Triangle::GetCenterPoint() const {
-    return Vec2D((mPoints[0].GetX() + mPoints[0].GetX() + mPoints[0].GetX()) / 3.0f, (mPoints[0].GetY() + mPoints[0].GetY() + mPoints[0].GetY()) / 3.0f);
+    return Vec2D((mPoints[0].GetX() + mPoints[1].GetX() + mPoints[2].GetX()) / 3.0f, (mPoints[0].GetY() + mPoints[1].GetY() + mPoints[2].GetY()) / 3.0f);
+}
+
+void Triangle::MoveTo(const Vec2D& point) {
+    MoveBy(point - GetCenterPoint());
 }
 
 float Triangle::Area() const {

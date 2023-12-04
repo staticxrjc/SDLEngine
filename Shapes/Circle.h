@@ -10,7 +10,7 @@ class Circle : public Shape {
     inline virtual Vec2D GetCenterPoint() const override { return mPoints[0]; }
     inline float GetRadius() const { return mRadius; }
     inline void SetRadius(float radius) { mRadius = radius; }
-    inline void MoveTo(const Vec2D& point) { mPoints[0] = point; }
+    inline virtual void MoveTo(const Vec2D& point) override { mPoints[0] = point; }
 
     bool Intersects(const Circle& otherCircle) const;
     bool ContainsPoint(const Vec2D& point) const;
