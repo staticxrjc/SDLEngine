@@ -133,8 +133,12 @@ void Screen::Draw(const Line2D& line, const Color& color) {
     }
 }
 
-void Screen::Draw(const Star2D& star, const Color& color) {
-    for (auto& side : star.GetSides()) {
+void Screen::Draw(const Star2D& star, const Color& color, bool fill, const Color& fillColor) {
+    if (fill) FillPoly(star.GetPoints(), fillColor);
+
+    std::vector<Vec2D> points = star.GetPoints();
+    for (int i = 0; i < points.size(); i += 2) {
+        Line2D side = {points[i], points[i + 1]};
         Draw(side, color);
     }
 }
