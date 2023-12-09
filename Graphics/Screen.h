@@ -23,8 +23,8 @@ class Screen {
     void SwapScreen();
 
     void inline SetClearColor(const Color& color = Color::Black()) { mClearColor = color; }
-    uint32_t inline Width() { return mWidth; }
-    uint32_t inline Height() { return mHeight; }
+    uint32_t inline Width() const { return mWidth; }
+    uint32_t inline Height() const { return mHeight; }
 
     // Draw Methods Here
     void Draw(int x, int y, const Color& color);
