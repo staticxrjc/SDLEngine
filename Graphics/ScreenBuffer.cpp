@@ -8,6 +8,11 @@ ScreenBuffer::ScreenBuffer(const ScreenBuffer& screenBuffer) {
     SDL_BlitSurface(screenBuffer.mSurface, nullptr, mSurface, nullptr);
 }
 
+ScreenBuffer::ScreenBuffer(ScreenBuffer&& ScreenBuffer) {
+    mSurface = ScreenBuffer.mSurface;
+    ScreenBuffer.mSurface = nullptr;
+}
+
 ScreenBuffer::~ScreenBuffer() {
     if (mSurface) SDL_FreeSurface(mSurface);
 }
@@ -24,6 +29,17 @@ ScreenBuffer& ScreenBuffer::operator=(const ScreenBuffer& screenBuffer) {
         mSurface = SDL_CreateRGBSurfaceWithFormat(0, screenBuffer.mSurface->w, screenBuffer.mSurface->h, 0, screenBuffer.mSurface->format->format);
         SDL_BlitSurface(screenBuffer.mSurface, nullptr, mSurface, nullptr);
     }
+
+    return *this;
+}
+
+ScreenBuffer& ScreenBuffer::operator=(ScreenBuffer&& ScreenBuffer) {
+    if (this == &ScreenBuffer) return *this;
+
+    delete mSurface;
+
+    mSurface = ScreenBuffer.mSurface;
+    ScreenBuffer.mSurface = nullptr;
 
     return *this;
 }
