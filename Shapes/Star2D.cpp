@@ -33,7 +33,6 @@ void Star2D::MoveTo(const Vec2D& point) {
 }
 
 void Star2D::Update() {
-    const float pi = 3.141592654f;
     mRotationAngle += mRotationAngleChange;
     Vec2D StarPoint(mMidpoint.GetX(), mMidpoint.GetY() - mSize / 2);
     mPoints[0] = (StarPoint.GetRotatedVec(mRotationAngle, mMidpoint));

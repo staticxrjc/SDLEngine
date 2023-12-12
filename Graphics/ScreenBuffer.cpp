@@ -8,7 +8,7 @@ ScreenBuffer::ScreenBuffer(const ScreenBuffer& screenBuffer) {
     SDL_BlitSurface(screenBuffer.mSurface, nullptr, mSurface, nullptr);
 }
 
-ScreenBuffer::ScreenBuffer(ScreenBuffer&& ScreenBuffer) {
+ScreenBuffer::ScreenBuffer(ScreenBuffer&& ScreenBuffer) noexcept {
     mSurface = ScreenBuffer.mSurface;
     ScreenBuffer.mSurface = nullptr;
 }
@@ -51,13 +51,12 @@ void ScreenBuffer::Init(uint32_t format, uint32_t width, uint32_t height) {
 
 void ScreenBuffer::Clear(const Color& color) {
     assert(mSurface);
-    if (!mSurface) return;
     SDL_FillRect(mSurface, nullptr, color.GetPixelColor());
 }
 
 void ScreenBuffer::SetPixel(const Color& color, int x, int y) {
     assert(mSurface);
-    if (!(mSurface && y < mSurface->h && y >= 0 && x >= 0 && x < mSurface->w)) return;
+    if (!(y < mSurface->h && y >= 0 && x >= 0 && x < mSurface->w)) return;
     SDL_LockSurface(mSurface);
 
     uint32_t* pixels = (uint32_t*)mSurface->pixels;
@@ -71,6 +70,5 @@ void ScreenBuffer::SetPixel(const Color& color, int x, int y) {
 
 size_t ScreenBuffer::GetIndex(int r, int c) {
     assert(mSurface);
-    if (!mSurface) return 0;
     return r * mSurface->w + c;
 }

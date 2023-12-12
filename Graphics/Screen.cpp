@@ -57,7 +57,6 @@ SDL_Window* Screen::Init(uint32_t width, uint32_t height, uint32_t magnification
 
 void Screen::SwapScreen() {
     assert(moptrWindow);
-    if (!moptrWindow) return;
     ClearScreen();
 
     SDL_BlitScaled(mBackBuffer.GetSurface(), nullptr, mnoptrWindowSurface, nullptr);
@@ -69,19 +68,16 @@ void Screen::SwapScreen() {
 
 void Screen::Draw(int x, int y, const Color& color) {
     assert(moptrWindow);
-    if (!moptrWindow) return;
     mBackBuffer.SetPixel(color, x, y);
 }
 
 void Screen::Draw(const Vec2D& point, const Color& color) {
     assert(moptrWindow);
-    if (!moptrWindow) return;
     mBackBuffer.SetPixel(color, point.GetX(), point.GetY());
 }
 
 void Screen::Draw(const Line2D& line, const Color& color) {
     assert(moptrWindow);
-    if (!moptrWindow) return;
 
     int dx, dy;
 
@@ -200,7 +196,6 @@ void Screen::Draw(const Circle& circle, const Color& color, bool fill, const Col
 
 void Screen::ClearScreen() {
     assert(moptrWindow);
-    if (!moptrWindow) return;
     SDL_FillRect(mnoptrWindowSurface, nullptr, mClearColor.GetPixelColor());
 }
 

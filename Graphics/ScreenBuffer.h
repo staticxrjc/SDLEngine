@@ -1,5 +1,5 @@
 #ifndef GRAPHICS_SCREENBUFFER_H
-#define GRAPHIACS_SCREENBUFFER_H
+#define GRAPHICS_SCREENBUFFER_H
 #include <iostream>
 #include "Color.h"
 
@@ -9,7 +9,7 @@ class ScreenBuffer {
    public:
     ScreenBuffer() : mSurface(nullptr) {}
     ScreenBuffer(const ScreenBuffer& screenBuffer);
-    ScreenBuffer(ScreenBuffer&& ScreenBuffer);
+    ScreenBuffer(ScreenBuffer&& ScreenBuffer) noexcept ;
     ~ScreenBuffer();
 
     ScreenBuffer& operator=(const ScreenBuffer& screenBuffer);
