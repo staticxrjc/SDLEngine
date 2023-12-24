@@ -6,13 +6,13 @@
 #define SCENES_GAMESCENE_H
 
 #include "Scene.h"
-#include "../../Games/Game.h"
+#include "../../Games/IGame.h"
 #include <memory>
 
 
 class GameScene : public Scene {
 public:
-    GameScene(std::unique_ptr<Game> optrGame);
+    GameScene(std::unique_ptr<IGame> optrGame);
     virtual ~GameScene() = default;
     void Init() override;
     void Update(uint32_t dt) override;
@@ -21,7 +21,7 @@ public:
 
 
 private:
-    std::unique_ptr<Game> mGame;
+    std::unique_ptr<IGame> mGame;
 };
 
 

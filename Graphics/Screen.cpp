@@ -8,6 +8,7 @@
 #include "../Shapes/Circle.h"
 #include <SDL2/SDL.h>
 #include <cassert>
+#include <cmath>
 #include <algorithm>
 
 Screen::~Screen() {
@@ -18,7 +19,7 @@ Screen::~Screen() {
     }
 }
 
-SDL_Window* Screen::Init(uint32_t width, uint32_t height, uint32_t magnification) {
+SDL_Window *Screen::Init(uint32_t width, uint32_t height, uint32_t magnification) {
     if (SDL_Init(SDL_INIT_VIDEO)) {
         std::cout << "SDL_Init Failed\n";
         return nullptr;
@@ -28,12 +29,12 @@ SDL_Window* Screen::Init(uint32_t width, uint32_t height, uint32_t magnification
     mHeight = height;
 
     moptrWindow = SDL_CreateWindow(
-        "Make A Line",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        mWidth * magnification,
-        mHeight * magnification,
-        0);
+            "Make A Line",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            mWidth * magnification,
+            mHeight * magnification,
+            0);
 
     if (moptrWindow == nullptr) {
         std::cout << "Could not Create Window, Error: " << SDL_GetError() << std::endl;
@@ -42,7 +43,7 @@ SDL_Window* Screen::Init(uint32_t width, uint32_t height, uint32_t magnification
 
     mnoptrWindowSurface = SDL_GetWindowSurface(moptrWindow);
 
-    SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+    SDL_PixelFormat *pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
 
     Color::InitColorFormat(pixelFormat);  // Mandatory
 
@@ -66,17 +67,17 @@ void Screen::SwapScreen() {
     mBackBuffer.Clear();
 }
 
-void Screen::Draw(int x, int y, const Color& color) {
+void Screen::Draw(int x, int y, const Color &color) {
     assert(moptrWindow);
     mBackBuffer.SetPixel(color, x, y);
 }
 
-void Screen::Draw(const Vec2D& point, const Color& color) {
+void Screen::Draw(const Vec2D &point, const Color &color) {
     assert(moptrWindow);
     mBackBuffer.SetPixel(color, point.GetX(), point.GetY());
 }
 
-void Screen::Draw(const Line2D& line, const Color& color) {
+void Screen::Draw(const Line2D &line, const Color &color) {
     assert(moptrWindow);
 
     int dx, dy;
@@ -111,8 +112,7 @@ void Screen::Draw(const Line2D& line, const Color& color) {
 
             Draw(x0, y0, color);
         }
-    }
-    else {  // Travel along y
+    } else {  // Travel along y
         int d = dx - dy / 2;
 
         while (y0 != y1) {
@@ -129,7 +129,7 @@ void Screen::Draw(const Line2D& line, const Color& color) {
     }
 }
 
-void Screen::Draw(const Star2D& star, const Color& color, bool fill, const Color& fillColor) {
+void Screen::Draw(const Star2D &star, const Color &color, bool fill, const Color &fillColor) {
     if (fill) FillPoly(star.GetPoints(), fillColor);
 
     std::vector<Vec2D> points = star.GetPoints();
@@ -139,7 +139,7 @@ void Screen::Draw(const Star2D& star, const Color& color, bool fill, const Color
     }
 }
 
-void Screen::Draw(const Triangle& triangle, const Color& color, bool fill, const Color& fillColor) {
+void Screen::Draw(const Triangle &triangle, const Color &color, bool fill, const Color &fillColor) {
     if (fill) FillPoly(triangle.GetPoints(), fillColor);
 
     Line2D p0p1 = Line2D(triangle.GetP0(), triangle.GetP1());
@@ -151,7 +151,7 @@ void Screen::Draw(const Triangle& triangle, const Color& color, bool fill, const
     Draw(p2p0, color);
 }
 
-void Screen::Draw(const AARectangle& rect, const Color& color, bool fill, const Color& fillColor) {
+void Screen::Draw(const AARectangle &rect, const Color &color, bool fill, const Color &fillColor) {
     std::vector<Vec2D> points = rect.GetPoints();
     if (fill) FillPoly(points, fillColor);
 
@@ -166,7 +166,7 @@ void Screen::Draw(const AARectangle& rect, const Color& color, bool fill, const 
     Draw(p3p0, color);
 }
 
-void Screen::Draw(const Circle& circle, const Color& color, bool fill, const Color& fillColor) {
+void Screen::Draw(const Circle &circle, const Color &color, bool fill, const Color &fillColor) {
     static unsigned int NUM_CIRCLE_SEGMENTS = 30;
 
     std::vector<Vec2D> circlePoints;
@@ -191,7 +191,7 @@ void Screen::Draw(const Circle& circle, const Color& color, bool fill, const Col
 
     if (fill) FillPoly(circlePoints, fillColor);
 
-    for (const Line2D& line : lines) Draw(line, color);
+    for (const Line2D &line: lines) Draw(line, color);
 }
 
 void Screen::ClearScreen() {
@@ -199,8 +199,8 @@ void Screen::ClearScreen() {
     SDL_FillRect(mnoptrWindowSurface, nullptr, mClearColor.GetPixelColor());
 }
 
-void Screen::FillPoly(const std::vector<Vec2D>& points, const Color& color) {
-    if (points.size() == 0) return;
+void Screen::FillPoly(const std::vector<Vec2D> &points, const Color &color) {
+    if (points.empty()) return;
 
     float top = points[0].GetY();
     float bottom = points[0].GetY();
@@ -222,7 +222,8 @@ void Screen::FillPoly(const std::vector<Vec2D>& points, const Color& color) {
             float pointiY = points[i].GetY();
             float pointjY = points[j].GetY();
 
-            if ((pointiY <= (float)pixelY && pointjY > (float)pixelY) || (pointjY <= (float)pixelY && pointiY > (float)pixelY)) {
+            if ((pointiY <= (float) pixelY && pointjY > (float) pixelY) ||
+                (pointjY <= (float) pixelY && pointiY > (float) pixelY)) {
                 float denominator = pointjY - pointiY;
                 if (IsEqual(denominator, 0.0f)) continue;
 
@@ -240,7 +241,7 @@ void Screen::FillPoly(const std::vector<Vec2D>& points, const Color& color) {
                 if (nodeXVec[k + 1] > right) nodeXVec[k + 1] = right;
             }
 
-            for (int pixelX = nodeXVec[k]; pixelX < nodeXVec[k + 1]; ++pixelX) {
+            for (int pixelX = std::ceil(nodeXVec[k]); pixelX < static_cast<int>(std::ceil(nodeXVec[k + 1])); pixelX++) {
                 Draw(pixelX, pixelY, color);
             }
         }

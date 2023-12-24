@@ -4,7 +4,7 @@
 
 #include "GameScene.h"
 
-GameScene::GameScene(std::unique_ptr<Game> optrGame) : mGame(std::move(optrGame)) {}
+GameScene::GameScene(std::unique_ptr<IGame> optrGame) : mGame(std::move(optrGame)) {}
 
 void GameScene::Init() {
     mGame->Init(mGameController);

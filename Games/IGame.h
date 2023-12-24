@@ -11,9 +11,9 @@ class GameController;
 
 class Screen;
 
-class Game {
+class IGame {
 public:
-    virtual ~Game() = default;
+    virtual ~IGame() = default;
     virtual void Init(GameController &controller) = 0;
     virtual void Update(uint32_t dt) = 0;
     virtual void Draw(Screen &screen) = 0;

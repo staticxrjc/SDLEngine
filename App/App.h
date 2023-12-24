@@ -24,8 +24,9 @@ public:
     Scene *TopScene();  // current scene
 
 private:
+    void setWindowTitle();
     Screen mScreen;
-    SDL_Window *mnoptrWindow;
+    SDL_Window *mWindow;
 
     std::vector<std::unique_ptr<Scene>> mSceneStack;
     InputController mInputController;

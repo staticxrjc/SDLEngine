@@ -4,12 +4,9 @@
 #include "../../Shapes/AARectangle.h"
 #include "../../Shapes/Triangle.h"
 #include "../../Shapes/Circle.h"
-#include "../../Graphics/Color.h"
-#include "../Input/GameController.h"
 #include <iostream>
 
-ArcadeScene::ArcadeScene() {
-}
+ArcadeScene::ArcadeScene() = default;
 
 void ArcadeScene::Init() {
     ButtonAction action;

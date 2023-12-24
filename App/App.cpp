@@ -10,16 +10,16 @@ App &App::Singleton() {
 }
 
 bool App::Init(uint32_t width, uint32_t height, uint32_t magnification) {
-    mnoptrWindow = mScreen.Init(width, height, magnification);
+    mWindow = mScreen.Init(width, height, magnification);
 
     std::unique_ptr<ArcadeScene> arcadeScene = std::make_unique<ArcadeScene>();
     PushScene(std::move(arcadeScene));
 
-    return mnoptrWindow != nullptr;
+    return mWindow != nullptr;
 }
 
 void App::Run() {
-    if (!mnoptrWindow) return;
+    if (!mWindow) return;
     Vec2D screenCenter = {float(mScreen.Width()) / 2.0f, float(mScreen.Height()) / 2.0f};
 
     bool running = true;
@@ -67,27 +67,26 @@ void App::Run() {
 
 void App::PushScene(std::unique_ptr<Scene> scene) {
     assert(scene);
-    if (!scene) return;
     scene->Init();
     mInputController.SetGameController(scene->GetGameController());
     mSceneStack.emplace_back(std::move(scene));
-
-    if (TopScene())
-        SDL_SetWindowTitle(mnoptrWindow, TopScene()->GetSceneName().c_str());
+    setWindowTitle();
 }
 
 void App::PopScene() {
     if (mSceneStack.empty()) return;
     mSceneStack.pop_back();
-
-    if (TopScene()) {
-        mInputController.SetGameController(TopScene()->GetGameController());
-        SDL_SetWindowTitle(mnoptrWindow, TopScene()->GetSceneName().c_str());
-    }
+    setWindowTitle();
 }
 
 Scene *App::TopScene() {
     if (mSceneStack.empty()) return nullptr;
 
     return mSceneStack.back().get();
+}
+
+void App::setWindowTitle() {
+    Scene *topScene = TopScene();
+    if (topScene)
+        SDL_SetWindowTitle(mWindow, topScene->GetSceneName().c_str());
 }
