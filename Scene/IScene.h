@@ -2,8 +2,8 @@
 #define APP_SCENES_SCENE_H
 
 #include <string>
-#include <stdint.h>
-#include "../Input/GameController.h"
+#include <cstdint>
+#include "../../Engine/Input/GameController.h"
 
 class Screen;
 

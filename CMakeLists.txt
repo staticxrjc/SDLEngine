@@ -1,9 +1,11 @@
 add_subdirectory(Graphics)
+add_subdirectory(Input)
+add_subdirectory(Scene)
 add_subdirectory(Shapes)
 add_subdirectory(Utils)
-add_subdirectory(App)
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
-add_library(Engine INTERFACE
-        Games/IGame.h)
+add_library(Engine INTERFACE)
 target_include_directories(Engine INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(Engine INTERFACE Graphics Shapes Utils)
+target_link_libraries(Engine INTERFACE Graphics Input Shapes Utils ${SDL2_LIBRARIES})
