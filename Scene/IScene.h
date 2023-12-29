@@ -8,14 +8,14 @@
 class Screen;
 
 // Interface
-class Scene {
+class IScene {
 public:
-    virtual ~Scene() {}
+    virtual ~IScene() = default;
 
     virtual void Init() = 0;
     virtual void Update(uint32_t dt) = 0;
     virtual void Draw(Screen &theScreen) = 0;
-    virtual const std::string &GetSceneName() const = 0;
+    [[nodiscard]] virtual const std::string &GetSceneName() const = 0;
 
     inline GameController *GetGameController() { return &mGameController; }
 
