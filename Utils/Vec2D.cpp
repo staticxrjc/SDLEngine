@@ -23,17 +23,17 @@ bool Vec2D::operator!=(const Vec2D& vec) const {
 }
 
 Vec2D Vec2D::operator-() const {
-    return Vec2D(-mX, -mY);
+    return {-mX, -mY};
 }
 
 Vec2D Vec2D::operator*(float scalar) const {
-    return Vec2D(mX * scalar, mY * scalar);
+    return {mX * scalar, mY * scalar};
 }
 
 Vec2D Vec2D::operator/(float scalar) const {
-    assert(fabs(scalar) > EPSILON);
+    assert(std::fabs(scalar) > EPSILON);
 
-    return Vec2D(mX / scalar, mY / scalar);
+    return {mX / scalar, mY / scalar};
 }
 
 Vec2D& Vec2D::operator*=(float scalar) {
@@ -42,18 +42,18 @@ Vec2D& Vec2D::operator*=(float scalar) {
 }
 
 Vec2D& Vec2D::operator/=(float scalar) {
-    assert(fabs(scalar) > EPSILON);
+    assert(std::fabs(scalar) > EPSILON);
 
     *this = *this / scalar;
     return *this;
 }
 
 Vec2D Vec2D::operator+(const Vec2D& vec) const {
-    return Vec2D(mX + vec.mX, mY + vec.mY);
+    return {mX + vec.mX, mY + vec.mY};
 }
 
 Vec2D Vec2D::operator-(const Vec2D& vec) const {
-    return Vec2D(mX - vec.mX, mY - vec.mY);
+    return {mX - vec.mX, mY - vec.mY};
 }
 
 Vec2D& Vec2D::operator+=(const Vec2D& vec) {
@@ -71,7 +71,7 @@ float Vec2D::MagSq() const {
 }
 
 float Vec2D::Mag() const {
-    return sqrt(MagSq());
+    return std::sqrt(MagSq());
 }
 
 Vec2D Vec2D::GetUnitVec() const {
