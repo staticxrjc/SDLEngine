@@ -25,7 +25,7 @@ bool FileCommandLoader::LoadFile(const std::string &filePath) {
     while (!inFile.eof()) {
         std::getline(inFile, line);
 
-        size_t commandPosition = std::string::npos;
+        size_t commandPosition;
 
         if ((commandPosition = line.find(':') != std::string::npos)) {
             size_t cursorPosition = line.find_first_of(' ', commandPosition);
@@ -35,7 +35,7 @@ bool FileCommandLoader::LoadFile(const std::string &filePath) {
                 cursorPosition -= 1;
             }
 
-            std::string commandStr = line.substr(commandPosition + 1, cursorPosition);
+            std::string commandStr = line.substr(commandPosition, cursorPosition);
             cursorPosition += 1;
 
             for (auto &mCommand: mCommands) {
