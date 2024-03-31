@@ -50,6 +50,10 @@ InputKey GameController::UpKey() {
     return static_cast<InputKey>(SDLK_UP);
 }
 
+InputKey GameController::SpaceKey() {
+    return static_cast<InputKey>(SDLK_SPACE);
+}
+
 InputKey GameController::DownKey() {
     return static_cast<InputKey>(SDLK_DOWN);
 }

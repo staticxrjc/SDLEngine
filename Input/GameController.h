@@ -18,6 +18,7 @@ class GameController {
     static InputKey LeftKey();
     static InputKey RightKey();
     static InputKey UpKey();
+    static InputKey SpaceKey();
     static InputKey DownKey();
 
     inline const MouseMovedAction& GetMouseMovedAction() { return mMouseMovedAction; }
