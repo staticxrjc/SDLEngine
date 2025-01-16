@@ -5,6 +5,7 @@
 #ifndef UTILS_FILECOMMANDLOADER_H
 #define UTILS_FILECOMMANDLOADER_H
 
+#include <cstdint>
 #include <functional>
 #include <vector>
 #include <string>
